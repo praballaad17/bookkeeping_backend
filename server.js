@@ -1,0 +1,22 @@
+const express = require("express");
+const user = require("./routes/user");
+const auth = require("./routes/auth");
+const http = require("http")
+require('dotenv').config()
+
+const app = express();
+require("./startups/cors")(app);
+const server = http.createServer(app);
+
+app.use(express.json({ limit: '50mb' }));
+require("./startups/dotenv")();
+const { mongofunction } = require("./startups/mongodb");
+mongofunction(app);
+
+app.use("/api/auth", auth);
+app.use("/api/user", user);
+
+
+
+const port = process.env.PORT || 3003;
+server.listen(port, () => console.log(`Listening on port ${port}...`));
