@@ -3,7 +3,6 @@ const validator = require('validator');
 const bcrypt = require('bcrypt');
 const Schema = mongoose.Schema;
 
-const RequestError = require('../errorTypes/RequestError');
 
 const UserSchema = new Schema({
     email: {

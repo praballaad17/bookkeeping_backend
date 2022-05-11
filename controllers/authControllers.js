@@ -1,10 +1,6 @@
 const jwt = require('jwt-simple');
-const crypto = require('crypto');
 const User = require('../models/user');
-const Followers = require('../models/Followers');
-const Following = require('../models/Following');
-const ConfirmationToken = require('../models/confirmationToken');
-const profileImg = require('../models/profileImg');
+
 const bcrypt = require('bcrypt');
 
 // const {
@@ -17,7 +13,6 @@ const {
     validateUsername,
     validatePassword,
 } = require('../utils/validation');
-const Notification = require('../models/notification');
 
 module.exports.verifyJwt = (token) => {
     return new Promise(async (resolve, reject) => {
@@ -147,36 +142,9 @@ module.exports.register = async (req, res, next) => {
         });
         if (document) return res.status(400).send('Username or email already register')
         user = new User({ username, fullName, email, password });
-        // confirmationToken = new ConfirmationToken({
-        //     user: user._id,
-        //     token: crypto.randomBytes(20).toString('hex'),
-        // });
-        const followers = new Followers({ user: user._id, followers: [] })
-        const following = new Following({
-            user: user._id, following: [
-                { _id: "619b52b3af4aa90023635dea" }
-            ]
-        })
-        const notification = new Notification({
-            user: { _id: user._id, username: username, fullName: fullName },
-            notification: []
-        })
-        const displayImg = await profileImg({
-            user: {
-                username: username,
-                _id: user._id
-            },
-            displayImg: {
-                profileImg: "",
-                profileCover: ""
-            }
-        })
+
         await user.save();
         // await confirmationToken.save();
-        await followers.save();
-        await following.save();
-        await displayImg.save()
-        await notification.save();
         res.status(201).send({
             user: {
                 email: user.email,
