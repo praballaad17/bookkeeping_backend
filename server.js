@@ -1,6 +1,7 @@
 const express = require("express");
 const user = require("./routes/user");
 const auth = require("./routes/auth");
+const business = require("./routes/busRoutes")
 const http = require("http")
 require('dotenv').config()
 
@@ -15,7 +16,7 @@ mongofunction(app);
 
 app.use("/api/auth", auth);
 app.use("/api/user", user);
-
+app.use("/api/business", business);
 
 
 const port = process.env.PORT || 3003;
