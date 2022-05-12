@@ -2,6 +2,7 @@ const express = require("express");
 const user = require("./routes/user");
 const auth = require("./routes/auth");
 const business = require("./routes/busRoutes")
+const items = require("./routes/itemRoutes")
 const http = require("http")
 require('dotenv').config()
 
@@ -17,7 +18,7 @@ mongofunction(app);
 app.use("/api/auth", auth);
 app.use("/api/user", user);
 app.use("/api/business", business);
-
+app.use("/api/item/", items)
 
 const port = process.env.PORT || 3003;
 server.listen(port, () => console.log(`Listening on port ${port}...`));

@@ -2,12 +2,12 @@ const express = require('express');
 const router = express.Router();
 const {
     businessDetails,
-    getBusinesDetails,
-    updateBusinesDetails
+    getBusinessDetails,
+    updateBusinessDetails
 } = require("../controllers/busController")
 
 router.post('/postDetails', businessDetails);
-router.get('/getDetails/:id', getBusinesDetails);
-router.put('/updateDetails/:id', updateBusinesDetails);
+router.get('/getDetails/:id', getBusinessDetails);
+router.put('/updateDetails/:id', updateBusinessDetails);
 
 module.exports = router;
