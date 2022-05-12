@@ -66,3 +66,10 @@ module.exports.validatePhoneNo = (phoneNo) => {
   }
   return false;
 }
+
+module.exports.validategstPin = (gstpin) => {
+  if (gstpin.length != 10) {
+    return 'Invalid GST Pin! It does not contain 10 digits';
+  }
+  return false;
+}

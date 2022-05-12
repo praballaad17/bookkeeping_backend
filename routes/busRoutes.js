@@ -7,7 +7,7 @@ const {
 } = require("../controllers/busController")
 
 router.post('/postDetails', businessDetails);
-router.get('/getDetials/:id', getBusinesDetails);
+router.get('/getDetails/:id', getBusinesDetails);
 router.put('/updateDetails/:id', updateBusinesDetails);
 
 module.exports = router;

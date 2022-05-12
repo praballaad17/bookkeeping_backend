@@ -1,4 +1,5 @@
 const Business = require('../models/business');
+const jwt = require('jwt-simple');
 const {
     validateEmail,
     validategstPin,
@@ -38,7 +39,7 @@ module.exports.businessDetails = async (req, res, next) => {
     } catch (err) {
         next(err);
     }
-
+}
     module.exports.getBusinesDetails = async (req, res, next) => {
         try {
             const company = await Business.findOne({ email: req.params.id });
@@ -85,5 +86,4 @@ module.exports.businessDetails = async (req, res, next) => {
         } catch (err) {
             next(err);
             }
-        }
-}
+    }
