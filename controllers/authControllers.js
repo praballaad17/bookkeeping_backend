@@ -115,7 +115,7 @@ module.exports.loginAuthentication = async (req, res, next) => {
             });
         });
     } catch (err) {
-        next(err);
+        res.send(err);
     }
 };
 
@@ -153,7 +153,7 @@ module.exports.register = async (req, res, next) => {
             token: jwt.encode({ id: user._id, username: user.username }, process.env.JWT_SECRET),
         });
     } catch (err) {
-        return res.send(err)
+        return res.send(err);
     }
     //   sendConfirmationEmail(user.username, user.email, confirmationToken.token);
 };
@@ -185,8 +185,8 @@ module.exports.changePassword = async (req, res, next) => {
 
         userDocument.password = newPassword;
         await userDocument.save();
-        return res.send();
+        return res.send("Password Updated");
     } catch (err) {
-        return next(err);
+        return res.send(err);
     }
 };
