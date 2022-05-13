@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const validator = require('validator');
 const Schema = mongoose.Schema;
 
 const ItemSchema = new Schema({
@@ -36,7 +35,7 @@ const ItemSchema = new Schema({
     itemWiseDiscount: {
         type: String,
     },
-    udateSalePrice: {
+    updateSalePrice: {
         type: String, 
     },
     serialNo: {

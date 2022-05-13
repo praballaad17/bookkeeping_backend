@@ -1,7 +1,7 @@
-const Item = require("../models/item");
+const Item = require("../models/itemInventory");
 const jwt = require("jwt-simple");
 
-module.exports.itemDetails = async (req, res, next) => {
+module.exports.addItem = async (req, res, next) => {
   const {
     itemID,
     stockMaintenance,
@@ -13,7 +13,7 @@ module.exports.itemDetails = async (req, res, next) => {
     description,
     itemWiseTax,
     itemWiseDiscount,
-    udateSalePrice,
+    updateSalePrice,
     serialNo,
     mrp,
     batchNo,
@@ -26,8 +26,6 @@ module.exports.itemDetails = async (req, res, next) => {
   try {
     const document = await Item.findOne({ itemID: itemID });
 
-    // if (document) return res.status(400).send('PhoneNo or email already used')
-
     newItem = new Item({
       itemID,
       stockMaintenance,
@@ -39,7 +37,7 @@ module.exports.itemDetails = async (req, res, next) => {
       description,
       itemWiseTax,
       itemWiseDiscount,
-      udateSalePrice,
+      updateSalePrice,
       serialNo,
       mrp,
       batchNo,
@@ -56,7 +54,7 @@ module.exports.itemDetails = async (req, res, next) => {
     next(err);
   }
 };
-module.exports.getitemDetails = async (req, res, next) => {
+module.exports.getItemDetails = async (req, res, next) => {
   try {
     const company = await Item.findOne({ itemID: req.params.id });
     res.send(company);
@@ -65,7 +63,7 @@ module.exports.getitemDetails = async (req, res, next) => {
   }
 };
 
-module.exports.updateitemDetails = async (req, res, next) => {
+module.exports.updateItemDetails = async (req, res, next) => {
   const {
     itemID,
     stockMaintenance,
@@ -77,7 +75,7 @@ module.exports.updateitemDetails = async (req, res, next) => {
     description,
     itemWiseTax,
     itemWiseDiscount,
-    udateSalePrice,
+    updateSalePrice,
     serialNo,
     mrp,
     batchNo,
@@ -102,7 +100,7 @@ module.exports.updateitemDetails = async (req, res, next) => {
           description,
           itemWiseTax,
           itemWiseDiscount,
-          udateSalePrice,
+          updateSalePrice,
           serialNo,
           mrp,
           batchNo,
