@@ -1,7 +1,9 @@
 const express = require("express");
 const user = require("./routes/user");
 const auth = require("./routes/auth");
-const business = require("./routes/busRoutes")
+const business = require("./routes/busRoutes");
+const items = require("./routes/itemRoutes");
+const invoice = require("./routes/invoiceRoutes");
 const http = require("http")
 require('dotenv').config()
 
@@ -17,7 +19,8 @@ mongofunction(app);
 app.use("/api/auth", auth);
 app.use("/api/user", user);
 app.use("/api/business", business);
-
+app.use("/api/item/", items);
+app.use("/api/invoice/", invoice);
 
 const port = process.env.PORT || 3003;
 server.listen(port, () => console.log(`Listening on port ${port}...`));

@@ -40,7 +40,7 @@ module.exports.businessDetails = async (req, res, next) => {
         next(err);
     }
 }
-    module.exports.getBusinesDetails = async (req, res, next) => {
+    module.exports.getBusinessDetails = async (req, res, next) => {
         try {
             const company = await Business.findOne({ email: req.params.id });
             res.send(company);
@@ -49,7 +49,7 @@ module.exports.businessDetails = async (req, res, next) => {
         }
     }
 
-    module.exports.updateBusinesDetails = async (req, res, next) => {
+    module.exports.updateBusinessDetails = async (req, res, next) => {
         
         const { businessName, phoneNo, email, gstpin, description, businesstype, businessCategory, address, pincode } = req.body;
 
