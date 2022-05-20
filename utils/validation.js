@@ -59,3 +59,17 @@ module.exports.validateWebsite = (website) => {
   }
   return false;
 };
+
+module.exports.validatePhoneNo = (phoneNo) => {
+  if (phoneNo.length != 10) {
+    return 'Invalid Phone Number! It does not contain 10 digits';
+  }
+  return false;
+}
+
+module.exports.validategstPin = (gstpin) => {
+  if (gstpin.length != 10) {
+    return 'Invalid GST Pin! It does not contain 10 digits';
+  }
+  return false;
+}
