@@ -19,8 +19,8 @@ mongofunction(app);
 app.use("/api/auth", auth);
 app.use("/api/user", user);
 app.use("/api/business", business);
-app.use("/api/item/", items);
-app.use("/api/invoice/", invoice);
+app.use("/api/item", items);
+app.use("/api/invoice", invoice);
 
 const port = process.env.PORT || 3003;
 server.listen(port, () => console.log(`Listening on port ${port}...`));

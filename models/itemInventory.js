@@ -2,56 +2,72 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const ItemSchema = new Schema({
-    itemID: {
+    itemCode: {
         type: String,
         require: true,
-        unique:true,
+        unique: true,
     },
-    stockMaintenance: {
+    userId: {
+        type: Schema.Types.ObjectId,
+        ref: "User"
+    },
+    name: {
+        type: String
+    },
+    purchasePrice: {
+        type: Number
+    },
+    salePrice: {
+        type: Number
+    },
+    openigStockQuantity: {
         type: String,
     },
     lowStockDialog: {
-        type: String,       
+        type: String,
     },
     itemsUnit: {
         type: String,
     },
     defaultUnit: {
         type: String,
-        require: true,
+        // require: true,
     },
-    itemCategory :{
+    itemCategory: {
         type: String,
     },
     partyWiseItemRate: {
-        type: String, 
+        type: String,
     },
     description: {
-        type: String,   
+        type: String,
     },
     itemWiseTax: {
+        type: String,
+    },
+    inclusionTax: {
         type: String,
     },
     itemWiseDiscount: {
         type: String,
     },
     updateSalePrice: {
-        type: String, 
+        type: String,
     },
     serialNo: {
-        type: String, 
+        type: String,
     },
     mrp: {
-        type: Number,   
+        type: Number,
     },
     batchNo: {
-        type: String,   
+        type: String,
     },
     expDate: {
-        type: Date,     
+        type: Date,
     },
     mfgDate: {
-        type: Date,    
+        type: Date,
     },
     modelNo: {
         type: Number,
@@ -59,6 +75,7 @@ const ItemSchema = new Schema({
     size: {
         type: Number,
     },
+
 
 });
 

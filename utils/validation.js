@@ -68,6 +68,7 @@ module.exports.validatePhoneNo = (phoneNo) => {
 }
 
 module.exports.validategstPin = (gstpin) => {
+  /// add middleware (gst api validation)
   if (gstpin.length != 10) {
     return 'Invalid GST Pin! It does not contain 10 digits';
   }
