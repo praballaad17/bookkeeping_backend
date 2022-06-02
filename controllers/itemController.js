@@ -159,3 +159,15 @@ module.exports.getItemsByUserId = async (req, res, next) => {
     next(err);
   }
 };
+
+module.exports.searchItem = async (req, res, next) => {
+  let { query } = req.params;
+  console.log(query);
+  try {
+    const itemArray = await Item.find({ name: { $regex: new RegExp(query), $options: "i" } });
+    res.status(200).send(itemArray);
+  } catch (error) {
+    next(error);
+  }
+
+}
