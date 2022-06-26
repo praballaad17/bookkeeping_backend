@@ -1,18 +1,17 @@
 const Invoice = require("../models/invoice");
-const InvoiceItem = require("../models/invoiceItem");
+const Party = require("../models/party");
 const { validatePhoneNo } = require("../utils/validation");
 
 module.exports.addInvoice = async (req, res, next) => {
     // const { invoiceID, shipedTo, shippingAddress, phoneNo, todayDate, dueDate, itemIds, subTotal, gstTax, Discount, total } = req.body;
-    const { itemlist, userId, type, total } = req.body
-    console.log(req.body);
+    const { itemlist, userId, invoiceNumber, type, total, partyId, date } = req.body
 
     // const phoneNoError = validatePhoneNo(phoneNo);
     // if (phoneNoError) return res.status(400).send({ error: phoneNoError });
 
     try {
         // newInvoice = new Invoice({invoiceID, shipedTo, shippingAddress, phoneNo, todayDate, dueDate, itemIds, subTotal, gstTax, Discount, total});
-        newInvoice = new Invoice({ itemIds: itemlist, total, todayDate: new Date(), userId, type })
+        newInvoice = new Invoice({ itemIds: itemlist, total, date, user: userId, type, party: partyId, invoiceNumber })
         await newInvoice.save();
 
         res.status(201).send(newInvoice);
@@ -23,18 +22,18 @@ module.exports.addInvoice = async (req, res, next) => {
 
 module.exports.getInvoiceDetails = async (req, res, next) => {
     try {
-        const newInvoice = await Invoice.findOne({ invoiceID: req.params.id });
+        const newInvoice = await Invoice.findOne({ _id: req.params.id });
         res.send(newInvoice);
     } catch (err) {
         next(err);
     }
 }
 
-module.exports.getPurchaseInvoiceUserId = async (req, res, next) => {
-    const { userId } = req.params
+module.exports.getInvoiceUserId = async (req, res, next) => {
+    const { userId, type } = req.params
     try {
-        const invoiceArray = await Invoice.find({ type: "purchase", userId })
-        return res.status(200).send(invoiceArray)
+        const invoices = await Invoice.find({ type, user: userId }).populate("party", ["name", "balance"])
+        return res.status(200).send(invoices)
     } catch (error) {
         return res.status(500).send(error)
     }
@@ -73,5 +72,14 @@ module.exports.updateInvoiceDetails = async (req, res, next) => {
         });
     } catch (err) {
         next(err);
+    }
+}
+
+module.exports.deleteInvoice = async (req, res) => {
+    try {
+        const invoice = await Invoice.deleteOne({ _id: req.params.id })
+        return res.status(200).send("deleted")
+    } catch (error) {
+        return res.status(500).send(error)
     }
 }

@@ -4,12 +4,14 @@ const {
     addInvoice,
     getInvoiceDetails,
     updateInvoiceDetails,
-    getPurchaseInvoiceUserId
+    getInvoiceUserId,
+    deleteInvoice
 } = require("../controllers/invoiceController")
 
 router.post('/addInvoice', addInvoice);
 router.get('/getInvoice/:id', getInvoiceDetails);
-router.get('/getPurchaseInvoice/:userId', getPurchaseInvoiceUserId);
+router.get('/invoiceId/:userId/type/:type', getInvoiceUserId);
 router.put('/updateInvoice/:id', updateInvoiceDetails);
+router.delete('/invoice/:id', deleteInvoice);
 
 module.exports = router;

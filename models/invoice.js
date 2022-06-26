@@ -3,14 +3,18 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const InvoiceSchema = new Schema({
-    // invoiceID: {
-    //     type: String,
-    //     unique: true,
-    //     required: true,
-    // },
-    userId: {
+    invoiceNumber: {
+        type: String,
+        // unique: true,
+        // required: true,
+    },
+    user: {
         type: Schema.ObjectId,
         ref: "user"
+    },
+    party: {
+        type: Schema.Types.ObjectId,
+        ref: "Party",
     },
     type: {
         type: String,
@@ -30,16 +34,13 @@ const InvoiceSchema = new Schema({
     todayDate: {
         type: String,
         // default:  Date.now,
-        require: true,
+        // require: true,
     },
-    dueDate: {
+    date: {
         type: String,
         // require:true,
     },
-    itemIds: [{
-        type: Object,
-        // ref: "Items",
-    }],
+    itemIds: [],
     subTotal: {
         type: Number,
     },
