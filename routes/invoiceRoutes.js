@@ -11,7 +11,7 @@ const {
 router.post('/addInvoice', addInvoice);
 router.get('/getInvoice/:id', getInvoiceDetails);
 router.get('/invoiceId/:userId/type/:type', getInvoiceUserId);
-router.put('/updateInvoice/:id', updateInvoiceDetails);
+router.put('/userId/:userId/invoiceId/:invoiceId', updateInvoiceDetails);
 router.delete('/invoice/:id', deleteInvoice);
 
 module.exports = router;
