@@ -1,6 +1,9 @@
 const Invoice = require("../models/invoice");
 const Party = require("../models/party");
+const pdf = require('html-pdf');
 const { validatePhoneNo } = require("../utils/validation");
+
+const pdfTemplate = require('../Tamplete/template1');
 
 module.exports.addInvoice = async (req, res, next) => {
     // const { invoiceID, shipedTo, shippingAddress, phoneNo, todayDate, dueDate, itemIds, subTotal, gstTax, Discount, total } = req.body;
@@ -26,6 +29,27 @@ module.exports.getInvoiceDetails = async (req, res, next) => {
         res.send(newInvoice);
     } catch (err) {
         next(err);
+    }
+}
+
+module.exports.createInvoicePdf = async (req, res) => {
+    try {
+        pdf.create(pdfTemplate(req.body), {}).toFile(`${__dirname}/result.pdf`, (err) => {
+            if (err) {
+                res.send(Promise.reject());
+            }
+            res.send(Promise.resolve());
+        });
+    } catch (err) {
+        res.send(err);
+    }
+}
+
+module.exports.getPdfInvoice = async (req, res) => {
+    try {
+        res.sendFile(`${__dirname}/result.pdf`)
+    } catch (err) {
+        res.send(err);
     }
 }
 

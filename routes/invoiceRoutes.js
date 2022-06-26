@@ -5,11 +5,15 @@ const {
     getInvoiceDetails,
     updateInvoiceDetails,
     getInvoiceUserId,
-    deleteInvoice
+    deleteInvoice,
+    createInvoicePdf,
+    getPdfInvoice,
 } = require("../controllers/invoiceController")
 
 router.post('/addInvoice', addInvoice);
 router.get('/getInvoice/:id', getInvoiceDetails);
+router.post('/invoice-pdf', createInvoicePdf)
+router.get('/get-pdf-invoice', getPdfInvoice)
 router.get('/invoiceId/:userId/type/:type', getInvoiceUserId);
 router.put('/userId/:userId/invoiceId/:invoiceId', updateInvoiceDetails);
 router.delete('/invoice/:id', deleteInvoice);
