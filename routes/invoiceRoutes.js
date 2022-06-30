@@ -11,7 +11,7 @@ const {
 } = require("../controllers/invoiceController")
 
 router.post('/addInvoice', addInvoice);
-router.get('/getInvoice/:id', getInvoiceDetails);
+router.get('/invoiceId/:invoiceId', getInvoiceDetails);
 router.post('/invoice-pdf', createInvoicePdf)
 router.get('/get-pdf-invoice', getPdfInvoice)
 router.get('/invoiceId/:userId/type/:type', getInvoiceUserId);

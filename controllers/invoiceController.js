@@ -3,7 +3,7 @@ const Party = require("../models/party");
 const pdf = require('html-pdf');
 const { validatePhoneNo } = require("../utils/validation");
 
-const pdfTemplate = require('../Tamplete/template1');
+const pdfTemplate = require('../Tamplete/template2');
 
 module.exports.addInvoice = async (req, res, next) => {
     // const { invoiceID, shipedTo, shippingAddress, phoneNo, todayDate, dueDate, itemIds, subTotal, gstTax, Discount, total } = req.body;
@@ -25,7 +25,7 @@ module.exports.addInvoice = async (req, res, next) => {
 
 module.exports.getInvoiceDetails = async (req, res, next) => {
     try {
-        const newInvoice = await Invoice.findOne({ _id: req.params.id });
+        const newInvoice = await Invoice.findOne({ _id: req.params.invoiceId }).populate("party")
         res.send(newInvoice);
     } catch (err) {
         next(err);
