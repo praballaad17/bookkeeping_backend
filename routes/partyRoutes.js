@@ -9,7 +9,7 @@ const {
 
 router.post('/addParty', addParty);
 router.get('/getPartyById/:partyId', getPartyById);
-router.get('/getPartyByUserId/:userId', getPartyByUserId);
+router.get('/getPartyByUserId/:userId/partyType/:partyType', getPartyByUserId);
 router.post('/searchParty/:query', searchParty);
 
 module.exports = router;

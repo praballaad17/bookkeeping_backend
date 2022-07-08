@@ -36,6 +36,7 @@ module.exports.createInvoicePdf = async (req, res) => {
     try {
         pdf.create(pdfTemplate(req.body), {}).toFile(`${__dirname}/result.pdf`, (err) => {
             if (err) {
+                console.log(err);
                 res.send(Promise.reject());
             }
             res.send(Promise.resolve());

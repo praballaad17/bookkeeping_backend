@@ -1,9 +1,9 @@
 const Party = require('../models/party');
 const jwt = require('jwt-simple');
 
-module.exports.addParty = async (req, res, next) => {
+module.exports.addParty = async (req, res) => {
     const { userId, party } = req.body
-    console.log(party, userId);
+
     const { name, phone, email, balance, partyType, gstin, placeOfSupply, panNumber, billAddress, shippingAddress, creditPeriod, creditLimit } = party
     try {
         const party = new Party({ name, userId, phone, email, balance, partyType, gstin, placeOfSupply, panNumber, billAddress, shippingAddress, creditPeriod, creditLimit })
@@ -25,9 +25,15 @@ module.exports.getPartyById = async (req, res, next) => {
 }
 
 module.exports.getPartyByUserId = async (req, res, next) => {
-    const { userId } = req.params
+    const { userId, partyType } = req.params
     try {
-        const party = await Party.find({ userId })
+        let party
+        if (partyType === "all") {
+            party = await Party.find({ userId })
+        }
+        else {
+            party = await Party.find({ userId, partyType })
+        }
         return res.status(200).send(party)
     } catch (error) {
         return res.status(500).send(error)

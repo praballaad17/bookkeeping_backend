@@ -1,4 +1,5 @@
-module.exports = ({ gstin, phone, invoiceNumber, date, partyName, address, placeOfSupply, itemlist, discount, total, totalQuantity, receivedAmount, bankAccount, ifsc }) => {
+module.exports = ({ gstin, phone, upiId, invoiceNumber, date, shippingharges, partyName, address, placeOfSupply, itemlist, discount, total, totalQuantity, receivedAmount, bankAccount, ifsc }) => {
+    let i = 0
     return (`
   <!doctype html>
   <html>
@@ -766,7 +767,7 @@ module.exports = ({ gstin, phone, invoiceNumber, date, partyName, address, place
                   <div class="wdt-80 table-header">QTY</div>
                   <div class="wdt-71 table-header">MRP</div>
                   <div class="wdt-86 table-header">RATE/ITEM</div>
-                  <div class="wdt-78 table-header">DISCOUNT</div>
+                  <div class="wdt-78 table-header">DISCOUNTsdfsdf</div>
                   <div class="wdt-65 table-header">CGST</div>
                   <div class="wdt-65 table-header">SGST</div>
   
@@ -774,10 +775,8 @@ module.exports = ({ gstin, phone, invoiceNumber, date, partyName, address, place
               </div>
   
           
-              ${itemlist.map(function (item) {
-        return `<div class="row">
-
-            <div class="wdt-30 table-row-cell text-center">1</div>
+              ${itemlist.reduce((acc, item) => acc + `<div class="row">
+            <div class="wdt-30 table-row-cell text-center">${++i}</div>
             <div class="wdt-140 table-row-cell text-left">
                 <div class="item-name">${item.name}</div>
                 <div class="item-desc">Imei - 6654r6t11381</div>
@@ -801,24 +800,24 @@ module.exports = ({ gstin, phone, invoiceNumber, date, partyName, address, place
             </div>
 
             <div class="wdt-91 table-row-cell">${item.itemAmount}</div>
-        </div>`
-    })}
+        </div>`, ''
+    )}
   
   
               <div class="row">
                   <div class="wdt-30 table-charges-cell text-center"></div>
                   <div class="wdt-140 table-charges-cell text-right bold italic padding-right-10">
-                      Shipping Charge
+                      Shipping Charges
                   </div>
                   <div class="wdt-59 table-charges-cell text-center">-</div>
                   <div class="wdt-80 table-charges-cell text-center">-</div>
                   <div class="wdt-71 table-charges-cell text-center">-</div>
                   <div class="wdt-86 table-charges-cell text-center">-</div>
-                  <div class="wdt-78 table-charges-cell text-center">-</div>
+                  <div class="wdt-78 table-charges-cell text-center">--</div>
                   <div class="wdt-65 table-header"></div>
                   <div class="wdt-65 table-header"></div>
-                  <div class="wdt-91 table-charges-cell">250.0</div>
-              </div >
+                  <div class="wdt-91 table-charges-cell">${shippingharges ? shippingharges : "0"}</div>
+              </div > 
               <div class="row ht-25">
                   <div class="wdt-30 table-charges-cell text-center"></div>
                   <div class="wdt-140 table-charges-cell text-right bold italic padding-right-10">
@@ -915,7 +914,7 @@ module.exports = ({ gstin, phone, invoiceNumber, date, partyName, address, place
                             <div class="column-55">
                                 <div class="bold">Scan QR code with UPI app to pay</div>
                                 <div>UPI Id</div>
-                                <div>{upiId}</div>
+                                <div>${upiId ? upiId : ""}</div>
                             </div>
                             <div class="column-45 padding-left-10">
                                 <!--?xml version="1.0" standalone="yes"?-->
