@@ -17,6 +17,10 @@ require("./startups/dotenv")();
 const { mongofunction } = require("./startups/mongodb");
 mongofunction(app);
 
+app.get("/", (req, res) => {
+  res.send("server is up and running!");
+});
+
 app.use("/api/auth", auth);
 app.use("/api/user", user);
 app.use("/api/business", business);
