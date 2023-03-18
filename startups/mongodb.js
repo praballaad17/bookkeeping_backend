@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const crypto = require("crypto");
 const mongoURI = process.env.MONGOURI;
-// const mongoURI = "mongodb://localhost:27017/Touch";
+// const mongoURI = "mongodb://localhost:27017/bookkeeping";
 
 function mongofunction(app) {
   (async function () {
@@ -9,8 +9,6 @@ function mongofunction(app) {
       await mongoose.connect(mongoURI, {
         useNewUrlParser: true,
         useUnifiedTopology: true,
-        useCreateIndex: true,
-        useFindAndModify: false,
       });
       console.log("Connected to database");
     } catch (err) {
