@@ -4,19 +4,14 @@ const pdf = require("html-pdf");
 const { validatePhoneNo } = require("../utils/validation");
 
 const pdfTemplate = require("../Tamplete/template2");
+const InvoiceItem = require("../models/invoiceItem");
 
 module.exports.addInvoice = async (req, res, next) => {
-  // const { invoiceID, shipedTo, shippingAddress, phoneNo, todayDate, dueDate, itemIds, subTotal, gstTax, Discount, total } = req.body;
   const { itemlist, userId, invoiceNumber, type, total, partyId, date } =
     req.body;
 
-  // const phoneNoError = validatePhoneNo(phoneNo);
-  // if (phoneNoError) return res.status(400).send({ error: phoneNoError });
-
   try {
-    // newInvoice = new Invoice({invoiceID, shipedTo, shippingAddress, phoneNo, todayDate, dueDate, itemIds, subTotal, gstTax, Discount, total});
-    newInvoice = new Invoice({
-      itemIds: itemlist,
+    const newInvoice = new Invoice({
       total,
       date,
       user: userId,
@@ -24,6 +19,20 @@ module.exports.addInvoice = async (req, res, next) => {
       party: partyId,
       invoiceNumber,
     });
+
+    let newItemList = [];
+
+    itemlist.map(async (item) => {
+      const newinvoiceitem = new InvoiceItem({
+        userId,
+        invoice: newInvoice._id,
+        itemId: item._id,
+        unit: item.unit,
+      });
+      newItemList.push(newinvoiceitem._id);
+      await newinvoiceitem.save();
+    });
+    newInvoice.itemIds = newItemList;
     await newInvoice.save();
 
     res.status(201).send(newInvoice);
@@ -69,20 +78,23 @@ module.exports.getPdfInvoice = async (req, res) => {
 
 module.exports.getInvoiceUserId = async (req, res, next) => {
   const { userId, type } = req.params;
+
+  console.log(userId, type);
   try {
-    const invoices = await Invoice.find({ type, user: userId }).populate(
-      "party",
-      ["name", "balance"]
-    );
+    const invoices = await Invoice.find({ type, user: userId })
+      .populate("party", ["name", "balance", "gstType"])
+      .populate({ path: "itemIds", populate: { path: "itemId" } });
+
+    console.log(invoices);
     return res.status(200).send(invoices);
   } catch (error) {
+    console.log(error);
     return res.status(500).send(error);
   }
 };
 
 module.exports.updateInvoiceDetails = async (req, res, next) => {
   const { invoiceId } = req.params;
-  // const { invoiceID, shipedTo, shippingAddress, phoneNo, todayDate, dueDate, itemIds, subTotal, gstTax, Discount, total } = req.body;
   const { itemlist, invoiceNumber, type, total, partyId, date } = req.body;
   // const phoneNoError = validatePhoneNo(phoneNo);
   // if (phoneNoError) return res.status(400).send({ error: phoneNoError });
@@ -96,7 +108,6 @@ module.exports.updateInvoiceDetails = async (req, res, next) => {
           type: type,
           date: date,
           party: partyId,
-          itemIds: itemlist,
           total: total,
         },
       },
@@ -104,6 +115,25 @@ module.exports.updateInvoiceDetails = async (req, res, next) => {
         new: true,
       }
     );
+
+    itemlist.map(async (item) => {
+      if (item.isEdited) {
+        console.log(item);
+        const updated = await InvoiceItem.findOneAndUpdate(
+          { _id: item._id },
+          {
+            $set: {
+              unit: item.unit,
+              itemId: item.itemId,
+            },
+          },
+          {
+            new: true,
+          }
+        );
+      }
+    });
+
     res.status(201).send({
       updatedInvoice,
     });

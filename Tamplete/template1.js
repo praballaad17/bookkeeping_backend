@@ -1,6 +1,6 @@
 module.exports = ({ name, price1, price2, receiptId }) => {
-    const today = new Date();
-    return `
+  const today = new Date();
+  return `
     <!doctype html>
     <html>
        <head>
@@ -83,20 +83,22 @@ module.exports = ({ name, price1, price2, receiptId }) => {
           <div class="invoice-box">
              <table cellpadding="0" cellspacing="0">
                 <tr class="top">
-                   <td colspan="2">
+                   <td calSpan="2">
                       <table>
                          <tr>
                             <td class="title"><img  src="https://i2.wp.com/cleverlogos.co/wp-content/uploads/2018/05/reciepthound_1.jpg?fit=800%2C600&ssl=1"
                                style="width:100%; max-width:156px;"></td>
                             <td>
-                               Datum: ${`${today.getDate()}. ${today.getMonth() + 1}. ${today.getFullYear()}.`}
+                               Datum: ${`${today.getDate()}. ${
+                                 today.getMonth() + 1
+                               }. ${today.getFullYear()}.`}
                             </td>
                          </tr>
                       </table>
                    </td>
                 </tr>
                 <tr class="information">
-                   <td colspan="2">
+                   <td calSpan="2">
                       <table>
                          <tr>
                             <td>
@@ -123,7 +125,9 @@ module.exports = ({ name, price1, price2, receiptId }) => {
                 </tr>
              </table>
              <br />
-             <h1 class="justify-center">Total price: ${parseInt(price1) + parseInt(price2)}$</h1>
+             <h1 class="justify-center">Total price: ${
+               parseInt(price1) + parseInt(price2)
+             }$</h1>
           </div>
        </body>
     </html>
