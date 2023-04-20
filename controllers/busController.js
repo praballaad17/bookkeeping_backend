@@ -1,89 +1,84 @@
-const Business = require('../models/business');
-const jwt = require('jwt-simple');
+const Business = require("../models/business");
+const jwt = require("jwt-simple");
 const {
-    validateEmail,
-    validategstPin,
-    validatePhoneNo,
+  validateEmail,
+  validategstPin,
+  validatePhoneNo,
 } = require("../utils/validation");
+const User = require("../models/user");
 
-module.exports.businessDetails = async (req, res, next) => {
-    const { businessName, phoneNo, email, gstpin, description, businesstype, businessCategory, address, pincode } = req.body;
+module.exports.updateBusinessDetails = async (req, res, next) => {
+  const { userId } = req.params;
+  const {
+    businessName,
+    phoneNo,
+    email,
+    gstin,
+    description,
+    businessType,
+    gstType,
+    address,
+    state,
+    pincode,
+  } = req.body;
 
-    const gstpinError = validategstPin(gstpin);
-    if (gstpinError) return res.status(400).send({ error: gstpinError });
+  const user = await User.findById(userId);
 
-    const phoneNoError = validatePhoneNo(phoneNo);
-    if (phoneNoError) return res.status(400).send({ error: phoneNoError });
+  console.log(user);
 
-    const emailError = validateEmail(email);
-    if (emailError) return res.status(400).send({ error: emailError });
+  if (user) {
+    if (!user.profileId) {
+      const profile = new Business({
+        businessName,
+        phoneNo,
+        email,
+        gstin,
+        description,
+        businessType,
+        gstType,
+        address,
+        pincode,
+        state,
+      });
 
-    try {
-        const document = await Business.findOne({
-            $or: [{ email: email }, { phoneNo: phoneNo }]
+      try {
+        await profile.save();
+        await User.findByIdAndUpdate(userId, {
+          $set: {
+            profileId: profile._id,
+          },
         });
 
-        // if (document) return res.status(400).send('PhoneNo or email already used')
-        
-        company = new Business({ businessName, phoneNo, email, gstpin, description, businesstype, businessCategory, address, pincode});
+        return res.status(201).send("Create Profile Updated to user Document");
+      } catch (error) {
+        console.log(error);
 
-        await company.save();
-
-        res.status(201).send({
-            user: {
-                email: company.email,
-                businessName: company.businessName,
-            },
-            token: jwt.encode({ id: company._id, businessName: company.username }, process.env.JWT_SECRET),
+        return res
+          .status(400)
+          .send("Cannot create profile, and update to user document");
+      }
+    } else {
+      try {
+        await Business.findByIdAndUpdate(user.profileId, {
+          $set: {
+            businessName: businessName,
+            phoneNo: phoneNo,
+            email: email,
+            gstin: gstin,
+            state,
+            description: description,
+            gstType: gstType,
+            businessType: businessType,
+            address: address,
+            pincode: pincode,
+          },
         });
-    } catch (err) {
-        next(err);
+
+        return res.status(200).send("Profile Updated");
+      } catch (error) {
+        console.log(error);
+        return res.status(200).send("cannot update Profile");
+      }
     }
-}
-    module.exports.getBusinessDetails = async (req, res, next) => {
-        try {
-            const company = await Business.findOne({ email: req.params.id });
-            res.send(company);
-        } catch (err) {
-            next(err);
-        }
-    }
-
-    module.exports.updateBusinessDetails = async (req, res, next) => {
-        
-        const { businessName, phoneNo, email, gstpin, description, businesstype, businessCategory, address, pincode } = req.body;
-
-        const gstpinError = validategstPin(gstpin);
-        if (gstpinError) return res.status(400).send({ error: gstpinError });
-
-        const phoneNoError = validatePhoneNo(phoneNo);
-        if (phoneNoError) return res.status(400).send({ error: phoneNoError });
-
-        const emailError = validateEmail(email);
-        if (emailError) return res.status(400).send({ error: emailError });
-
-        try {
-            const company = await Business.updateOne({ email: req.params.id },
-                {
-                    $set: {
-                        businessName: businessName,
-                        phoneNo: phoneNo,
-                        email: email,
-                        gstpin: gstpin,
-                        description: description,
-                        businessCategory: businessCategory,
-                        businesstype: businesstype,
-                        address: address,
-                        pincode: pincode,
-            }});
-            res.status(201).send({
-            user: {
-                email: company.email,
-                businessName: company.businessName,
-            },
-            token: jwt.encode({ id: company._id, businessName: company.username }, process.env.JWT_SECRET),
-        });
-        } catch (err) {
-            next(err);
-            }
-    }
+  }
+};
