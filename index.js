@@ -1,11 +1,13 @@
 const express = require("express");
+
+const http = require("http");
+require("dotenv").config();
+
 const auth = require("./routes/auth");
 const items = require("./routes/itemRoutes");
 const invoice = require("./routes/invoiceRoutes");
 const party = require("./routes/partyRoutes");
 const gst = require("./routes/gst");
-const http = require("http");
-require("dotenv").config();
 
 const app = express();
 require("./startups/cors")(app);

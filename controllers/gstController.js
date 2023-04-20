@@ -1,6 +1,7 @@
 const Party = require("../models/party");
 const Invoice = require("../models/invoice");
 const FileReport = require("../models/fileReport");
+const { verifyOtp } = require("./authControllers");
 
 module.exports.getSalesInvoice = async (req, res) => {
   const { userId, start, end } = req.params;
@@ -160,7 +161,14 @@ module.exports.getGSTR3BFillingDetails = async (req, res) => {
 
 module.exports.postFillingDetails = async (req, res) => {
   const { userId } = req.params;
-  const { reportType, invoices, monthFinancialYear } = req.body;
+  const { reportType, invoices, monthFinancialYear, otp, otpId } = req.body;
+
+  try {
+    await verifyOtp(otp, otpId);
+  } catch (error) {
+    return res.status(401).send(error);
+  }
+
   try {
     const fileReport = new FileReport({
       user: userId,
