@@ -102,7 +102,6 @@ module.exports.updateItemDetails = async (req, res, next) => {
 
 module.exports.importItemBulk = async (req, res, next) => {
   const { itemArray, userId } = req.body;
-  console.log(itemArray, userId);
   itemArray.map(async (item) => {
     try {
       newItem = new Item({
@@ -117,7 +116,6 @@ module.exports.importItemBulk = async (req, res, next) => {
         inclusionTax: item.Inclusive_Of_Tax,
       });
       await newItem.save();
-      console.log(newItem);
     } catch (error) {
       console.log(error);
     }
@@ -137,7 +135,6 @@ module.exports.getItemsByUserId = async (req, res, next) => {
       .limit(limit)
       .skip(startIndex)
       .exec();
-    console.log(itemArray);
     res.send(itemArray);
   } catch (err) {
     next(err);
@@ -146,7 +143,6 @@ module.exports.getItemsByUserId = async (req, res, next) => {
 
 module.exports.searchItem = async (req, res, next) => {
   let { query } = req.params;
-  console.log(query);
   try {
     const itemArray = await Item.find({
       name: { $regex: new RegExp(query), $options: "i" },

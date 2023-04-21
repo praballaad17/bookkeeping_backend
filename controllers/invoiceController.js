@@ -79,13 +79,11 @@ module.exports.getPdfInvoice = async (req, res) => {
 module.exports.getInvoiceUserId = async (req, res, next) => {
   const { userId, type } = req.params;
 
-  console.log(userId, type);
   try {
     const invoices = await Invoice.find({ type, user: userId })
       .populate("party", ["name", "balance", "gstType"])
       .populate({ path: "itemIds", populate: { path: "itemId" } });
 
-    console.log(invoices);
     return res.status(200).send(invoices);
   } catch (error) {
     console.log(error);
@@ -118,7 +116,6 @@ module.exports.updateInvoiceDetails = async (req, res, next) => {
 
     itemlist.map(async (item) => {
       if (item.isEdited) {
-        console.log(item);
         const updated = await InvoiceItem.findOneAndUpdate(
           { _id: item._id },
           {
@@ -152,7 +149,6 @@ module.exports.deleteInvoice = async (req, res) => {
 };
 
 module.exports.searchInvoice = async (req, res) => {
-  console.log(req.params.searchKey);
   try {
     const invoice = await Invoice.find({
       $or: [

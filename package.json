@@ -25,6 +25,8 @@
     "lodash": "^4.17.21",
     "mongodb": "^4.2.1",
     "mongoose": "^5.12.13",
+    "nodemailer": "^6.9.1",
+    "nodemailer-smtp-transport": "^2.7.4",
     "validator": "^12.2.0"
   }
 }

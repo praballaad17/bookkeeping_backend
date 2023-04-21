@@ -24,8 +24,6 @@ module.exports.updateBusinessDetails = async (req, res, next) => {
 
   const user = await User.findById(userId);
 
-  console.log(user);
-
   if (user) {
     if (!user.profileId) {
       const profile = new Business({

@@ -64,21 +64,7 @@ module.exports.optionalAuth = async (req, res, next) => {
 };
 
 module.exports.loginAuthentication = async (req, res, next) => {
-  // const { token } = req.headers;
   const { usernameOrEmail, password } = req.body;
-  console.log(usernameOrEmail, password);
-  // if (token) {
-  //     try {
-  //         const user = await this.verifyJwt(token);
-  //         return res.send({
-  //             user,
-  //             token: token,
-  //         });
-  //     } catch (err) {
-  //         console.log(err);
-  //         return res.status(401).send({ error: err });
-  //     }
-  // }
 
   if (!usernameOrEmail || !password) {
     return res
@@ -90,7 +76,6 @@ module.exports.loginAuthentication = async (req, res, next) => {
     const user = await User.findOne({
       $or: [{ username: usernameOrEmail }, { email: usernameOrEmail }],
     });
-    console.log(user);
     if (!user || !user.password) {
       return res.status(401).send({
         error: "The credentials you provided are incorrect, please try again.",
@@ -157,8 +142,6 @@ module.exports.genrateOtp = async (req, res) => {
   let now = new Date();
   expire.setMinutes(expire.getMinutes() + 10);
 
-  console.log(expire, now, user);
-
   const resotp = new Otp({
     otp,
     userId,
@@ -211,8 +194,6 @@ module.exports.register = async (req, res, next) => {
   const { username, fullName, email, password } = req.body;
   let user = null;
   let confirmationToken = null;
-
-  console.log(req.body);
 
   const usernameError = validateUsername(username);
   if (usernameError) return res.status(400).send({ error: usernameError });

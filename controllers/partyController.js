@@ -20,7 +20,6 @@ module.exports.addParty = async (req, res) => {
     creditPeriod,
     creditLimit,
   } = party;
-  console.log(party);
   try {
     const party = new Party({
       name,

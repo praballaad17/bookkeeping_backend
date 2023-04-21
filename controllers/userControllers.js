@@ -8,8 +8,6 @@ module.exports.getUser = async (req, res) => {
       .select("-password")
       .populate("profileId");
 
-    console.log(user);
-
     return res.status(200).send(user);
   } catch (error) {
     console.log(error);
