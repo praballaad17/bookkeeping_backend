@@ -88,8 +88,7 @@ module.exports.loginAuthentication = async (req, res, next) => {
       }
       if (!result) {
         return res.status(401).send({
-          error:
-            "The credentials you provided are incorrect, please try again.",
+          error: "Password you provided is incorrect, please try again.",
         });
       }
 
@@ -174,8 +173,50 @@ module.exports.genrateOtp = async (req, res) => {
   });
 };
 
+module.exports.resetPassOtp = async (req, res) => {
+  const { email } = req.params;
+  let otp = Math.floor(100000 + Math.random() * 900000);
+
+  let expire = new Date();
+  let now = new Date();
+  expire.setMinutes(expire.getMinutes() + 10);
+
+  const resotp = new Otp({
+    otp,
+    email,
+    createdAt: now,
+    expiredAt: expire,
+  });
+
+  await resotp.save();
+
+  let mailOptions = {
+    from: process.env.EMAIL,
+    to: email,
+    subject: "OTP to Reset Password",
+    html: `
+      <p>Dear Applicant/ Taxpayer,</p>
+      <br>
+      <p>This is to inform you that you are in the process of resetting your password. In this regard you have given the e-mail ID for accessing the Bookkeeping for the first time for submitting this application form.
+      Your One Time Password for validation of your E-mail ID is ${otp} Please note this password will expire in 10 minutes. </p>`,
+  };
+
+  transporter.sendMail(mailOptions, (error, info) => {
+    if (error) {
+      console.log(error);
+      return res.send(error.message);
+    }
+    return res.send({
+      message: "OTP is sent ot your registed email!",
+      otpId: resotp._id,
+    });
+  });
+};
+
 module.exports.verifyOtp = async (otp, otpId) => {
   // const { otp, userId, otpId } = req.body;
+
+  console.log(otp, otpId);
 
   const checkotp = await Otp.findById(otpId);
 
@@ -190,6 +231,23 @@ module.exports.verifyOtp = async (otp, otpId) => {
   return "Verified!";
 };
 
+const verifyOtp = async (otp, otpId) => {
+  // const { otp, userId, otpId } = req.body;
+
+  console.log(otp, otpId);
+
+  const checkotp = await Otp.findById(otpId);
+
+  if (checkotp.otp != otp) {
+    throw new Error("Wrong OTP Provided");
+  }
+  const now = new Date();
+  if (checkotp.expiredAt < now) {
+    throw new Error("OTP is Expired!");
+  }
+
+  return "Verified!";
+};
 module.exports.register = async (req, res, next) => {
   const { username, fullName, email, password } = req.body;
   let user = null;
@@ -238,29 +296,28 @@ module.exports.getUserById = async (req, res, next) => {
   res.send(user);
 };
 
-module.exports.changePassword = async (req, res, next) => {
-  const { oldPassword, newPassword } = req.body;
-  const user = res.locals.user;
-  let currentPassword = undefined;
+module.exports.changePassword = async (req, res) => {
+  const { otp, password, otpId } = req.body;
 
   try {
-    const userDocument = await User.findById(user._id);
-    currentPassword = userDocument.password;
-
-    const result = await bcrypt.compare(oldPassword, currentPassword);
-    if (!result) {
-      return res.status("401").send({
-        error: "Your old password was entered incorrectly, please try again.",
+    try {
+      await verifyOtp(otp, otpId);
+    } catch (error) {
+      return res.status(401).send({
+        message: "Your otp was entered incorrectly, please try again.",
       });
     }
 
-    const newPasswordError = validatePassword(newPassword);
-    if (newPasswordError)
-      return res.status(400).send({ error: newPasswordError });
+    await User.findOneAndUpdate(
+      { email },
+      {
+        $set: {
+          password,
+        },
+      }
+    );
 
-    userDocument.password = newPassword;
-    await userDocument.save();
-    return res.send("Password Updated");
+    return res.status(200).send({ message: "Password Updated" });
   } catch (err) {
     return res.send(err);
   }

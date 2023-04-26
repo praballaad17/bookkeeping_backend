@@ -7,6 +7,7 @@ const OtpSchema = new Schema({
     required: true,
   },
   userId: { type: Schema.Types.ObjectId, ref: "User" },
+  email: String,
   createdAt: Date,
   expiredAt: Date,
 });
